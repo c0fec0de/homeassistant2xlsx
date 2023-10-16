@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "homeassistant2xlsx"
-version = "0.1.2"
+version = "1.0.0"
 description = "Add Home Assistant Data to Excel"
 readme = "README.md"
 license = "MIT"
@@ -77,7 +77,7 @@ line_length = 120
 exclude_lines = [
     'return NotImplemented',
     'raise NotImplementedError()',
-    'pragma: no cover'
+    'pragma: no cover',
 ]
 
 

@@ -124,7 +124,7 @@ def main(args=None):
     parser.add_argument("--timeoffset", help="Timestamp offset in minutes")
     # importlib is not available in py37
     pyversion = (sys.version_info.major, sys.version_info.minor)
-    if pyversion >= (3, 8):
+    if pyversion >= (3, 8):  # pragma: no cover
         # pylint: disable=import-outside-toplevel
         import importlib.metadata
 
