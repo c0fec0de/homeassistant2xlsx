@@ -1,0 +1,15 @@
+*.egg-info/
+*.sublime-workspace
+*.xml
+.coverage
+.tox
+.venv
+.mypy_cache
+/.vscode
+/docs/api
+__pycache__
+build
+dist/
+docs/_readthedocs/
+poetry.lock
+setup.py

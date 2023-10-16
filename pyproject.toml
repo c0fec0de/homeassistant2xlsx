@@ -1,0 +1,121 @@
+[tool.poetry]
+name = "homeassistant2xlsx"
+version = "0.1.0"
+description = "Add Home Assistant Data to Excel"
+readme = "README.md"
+license = "MIT"
+authors = [
+    "c0fec0de <c0fec0de@gmail.com>",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+packages = [
+    { include = "homeassistant2xlsx" },
+]
+
+[project.urls]
+"Homepage" = "https://github.com/c0fec0de/homeassistant2xlsx"
+"Documentation" = "https://homeassistant2xlsx.readthedocs.io/en/latest/"
+"Bug Tracker" = "https://github.com/c0fec0de/homeassistant2xlsx/issues"
+
+[tool.poetry.scripts]
+homeassistant2xlsx = 'homeassistant2xlsx:main'
+
+[tool.poetry.dependencies]
+python = '^3.7.2'
+openpyxl = "^3.1.2"
+requests = "^2.31.0"
+
+[tool.poetry.group.test.dependencies]
+black = '^22.3.0'
+coverage = '^6.4.4'
+isort = '^5.9'
+mypy = "~1.0.0"
+pylint = '^2.15'
+pytest = '^6.2'
+types-requests = "^2.31.0.9"
+
+[tool.poetry.group.doc.dependencies]
+sphinx = '^5.1.1'
+sphinx-rtd-theme = "^1.0.0"
+sphinxemoji = ">=0.2.0"
+
+[build-system]
+requires = ["poetry_core>=1.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.venv
+  | \.tox
+  | build
+  | dist
+  | setup\.py
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.coverage.report]
+exclude_lines = [
+    'return NotImplemented',
+    'raise NotImplementedError()',
+    'pragma: no cover'
+]
+
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+extension-pkg-whitelist = "pydantic"
+disable = [
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py,py-min
+isolated_build = True
+
+[tox:.package]
+basepython = python3
+
+[testenv:py]
+allowlist_externals = *
+setenv =
+    LANGUAGE=en_US
+
+commands =
+    poetry install --with=test --with=doc
+    poetry run black .
+    poetry run isort .
+    poetry run coverage run --source=homeassistant2xlsx --branch -m pytest --doctest-glob=docs/*.rst --doctest-modules --ignore-glob=tests/testdata* --ignore=docs/conf.py --log-level=DEBUG -vv --junitxml=report.xml
+    poetry run coverage report
+    poetry run coverage html
+    poetry run coverage xml
+    poetry run pylint homeassistant2xlsx tests
+    poetry run mypy homeassistant2xlsx
+    poetry run make html -C docs
+
+[testenv:py-min]
+allowlist_externals = *
+commands =
+    poetry install --without=test --without=doc
+    poetry run python -c 'import homeassistant2xlsx'
+    poetry run homeassistant2xlsx --version
+    poetry run python -m homeassistant2xlsx --version
+"""

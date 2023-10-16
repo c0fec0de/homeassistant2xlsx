@@ -1,0 +1,15 @@
+usage: homeassistant2xls [-h] [--token TOKEN] [--host HOST] [--port PORT] [--timeoffset TIMEOFFSET] [--version] xlsx
+
+Copy Data From Home-Assistant to XLSX files
+
+positional arguments:
+  xlsx
+
+options:
+  -h, --help            show this help message and exit
+  --token TOKEN         Home Assistant API Token. Mandatory.
+  --host HOST           Home Assistant Port. 'localhost' by default.
+  --port PORT           Home Assistant Port. '8123' by default.
+  --timeoffset TIMEOFFSET
+                        Timestamp offset in minutes
+  --version             show program's version number and exit
