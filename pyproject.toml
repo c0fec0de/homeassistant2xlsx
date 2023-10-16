@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "homeassistant2xlsx"
-version = "0.1.1"
+version = "0.1.2"
 description = "Add Home Assistant Data to Excel"
 readme = "README.md"
 license = "MIT"
