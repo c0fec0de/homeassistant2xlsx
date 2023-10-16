@@ -1,6 +1,6 @@
 
-Home Assistant 2 XLSX
-=====================
+Home Assistant 2 Excel
+======================
 
 Stay tuned.
 
