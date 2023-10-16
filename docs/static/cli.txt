@@ -1,4 +1,6 @@
-usage: homeassistant2xls [-h] [--token TOKEN] [--host HOST] [--port PORT] [--timeoffset TIMEOFFSET] [--version] xlsx
+usage: homeassistant2xls [-h] [--token TOKEN] [--host HOST] [--port PORT]
+                         [--timeoffset TIMEOFFSET] [--version]
+                         xlsx
 
 Copy Data From Home-Assistant to XLSX files
 
