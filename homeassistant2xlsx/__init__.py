@@ -9,7 +9,6 @@ Add Home Assistant Data to Excel.
 """
 
 import argparse
-import importlib.metadata
 import re
 import sys
 from datetime import datetime, timedelta
@@ -123,12 +122,16 @@ def main(args=None):
     parser.add_argument("--host", default="localhost", help="Home Assistant Port. 'localhost' by default.")
     parser.add_argument("--port", default="8123", help="Home Assistant Port. '8123' by default.")
     parser.add_argument("--timeoffset", help="Timestamp offset in minutes")
-
+    # importlib is not available in py37
     pyversion = (sys.version_info.major, sys.version_info.minor)
     if pyversion >= (3, 8):
+        # pylint: disable=import-outside-toplevel
+        import importlib.metadata
+
         version = importlib.metadata.version("homeassistant2xlsx")
         parser.add_argument("--version", action="version", version=f"homeassistant2xlsx {version}")
-        args = parser.parse_args(args=args)
+    # parse
+    args = parser.parse_args(args=args)
 
     timestamp = datetime.now()
     if args.timeoffset:

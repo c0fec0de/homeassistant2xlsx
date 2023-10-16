@@ -30,7 +30,7 @@ packages = [
 homeassistant2xlsx = 'homeassistant2xlsx:main'
 
 [tool.poetry.dependencies]
-python = '^3.8.1'
+python = '^3.7.2'
 openpyxl = "^3.1.2"
 requests = "^2.31.0"
 
