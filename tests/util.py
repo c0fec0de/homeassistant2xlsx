@@ -36,7 +36,7 @@ def mock_requests_get(host, port, token, data):
         assert urlp.hostname == host
         assert urlp.port == port
         assert urlp.path.startswith("/api/states/")
-        entity = urlp.path.removeprefix("/api/states/")
+        entity = urlp.path[len("/api/states/") :]
         json_data = {"state": data.get(entity, "unavailable")}
         return MockResponse(json_data, 200)
 
