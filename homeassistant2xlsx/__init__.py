@@ -11,6 +11,7 @@ Add Home Assistant Data to Excel.
 import argparse
 import re
 import sys
+from copy import copy
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -73,14 +74,22 @@ def _add_row(sheet, host, port, token, specs, timestamp):
     row = rows[-1]
 
     for spec, cell, prev_cell in zip(specs, row, prev_row):
+        # style
+        cell.font = copy(prev_cell.font)
+        cell.border = copy(prev_cell.border)
+        cell.fill = copy(prev_cell.fill)
+        cell.number_format = copy(prev_cell.number_format)
+        cell.protection = copy(prev_cell.protection)
+        cell.alignment = copy(prev_cell.alignment)
+        # value
         if spec:
+            # retrieve value
             cell.value = _get_cell(data, host, port, token, spec)
         else:
             # replicate formulas
             if str(prev_cell.value).startswith("="):
                 translator = openpyxl.formula.translate.Translator(prev_cell.value, origin=prev_cell.coordinate)
-                coordinate = cell.coordinate
-                sheet[coordinate] = translator.translate_formula(coordinate)
+                sheet[cell.coordinate] = translator.translate_formula(cell.coordinate)
 
 
 def run(xlsxpath: Path, host: str, port: str, token: str, timestamp: datetime):
@@ -121,7 +130,7 @@ def main(args=None):
     parser.add_argument("--token", help="Home Assistant API Token. Mandatory.")
     parser.add_argument("--host", default="localhost", help="Home Assistant Port. 'localhost' by default.")
     parser.add_argument("--port", default="8123", help="Home Assistant Port. '8123' by default.")
-    parser.add_argument("--timeoffset", help="Timestamp offset in minutes")
+    parser.add_argument("--timeoffset", help="Timestamp offset in minutes. Positive and negative numbers are allowed.")
     # importlib is not available in py37
     pyversion = (sys.version_info.major, sys.version_info.minor)
     if pyversion >= (3, 8):  # pragma: no cover
