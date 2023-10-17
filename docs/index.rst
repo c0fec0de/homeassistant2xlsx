@@ -1,6 +1,12 @@
 Home Assistant 2 Excel
 ======================
 
+
+.. contents::
+   :depth: 1
+   :local:
+
+
 Getting Started
 ---------------
 
@@ -38,8 +44,17 @@ Command Line Interface
    :language: text
 
 
-API
----
+Programming Interface
+---------------------
 
-.. toctree::
-    api/homeassistant2xlsx
+.. automodule:: homeassistant2xlsx
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Links
+-----
+
+- `PyPI - Python Package Index <https://pypi.org/project/homeassistant2xlsx/>`_
+- `Source Code <https://github.com/c0fec0de/homeassistant2xlsx>`_
+- `Issues <https://github.com/c0fec0de/homeassistant2xlsx/issues>`_
