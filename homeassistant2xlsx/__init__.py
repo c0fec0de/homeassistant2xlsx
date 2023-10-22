@@ -68,10 +68,23 @@ def _add_row(sheet, host, port, token, specs, timestamp):
         "date": timestamp.date(),
     }
 
-    sheet.append([""])
-    rows = tuple(sheet.rows)
-    prev_row = rows[-2]
-    row = rows[-1]
+    # Search 'latest' marker
+    for rowidx, row in enumerate(sheet.iter_rows(), 1):
+        cell = row[0]
+        comment = cell.comment
+        if comment and comment.text.strip() == "latest":
+            # add new row
+            rowidx += 1
+            sheet.insert_rows(rowidx)
+            # Move 'latest' marker
+            cell.comment = None
+            sheet.cell(rowidx, 1).comment = comment
+            break
+    else:
+        sheet.append([""])
+        rowidx = sheet.max_row
+
+    prev_row, row = sheet.iter_rows(min_row=rowidx - 1, max_row=rowidx)
 
     for spec, cell, prev_cell in zip(specs, row, prev_row):
         # style
@@ -90,6 +103,13 @@ def _add_row(sheet, host, port, token, specs, timestamp):
             if str(prev_cell.value).startswith("="):
                 translator = openpyxl.formula.translate.Translator(prev_cell.value, origin=prev_cell.coordinate)
                 sheet[cell.coordinate] = translator.translate_formula(cell.coordinate)
+
+    # repair formulas behind
+    for row in sheet.iter_rows(min_row=rowidx + 1):
+        for cell in row:
+            if str(cell.value).startswith("="):
+                translator = openpyxl.formula.translate.Translator(cell.value, origin=cell.coordinate)
+                sheet[cell.coordinate] = translator.translate_formula(row_delta=1)
 
 
 def run(xlsxpath: Path, host: str, port: str, token: str, timestamp: datetime):
