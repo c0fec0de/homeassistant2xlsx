@@ -20,6 +20,7 @@ import requests
 
 INVALID_NAME = "INVALID-NAME"
 INVALID_TYPE = "INVALID-TYPE"
+UNAVAILABLE = "unavailable"
 _RE_SPEC = re.compile(r"\A(?P<name>[^\|]*)(\|(?P<type>.*))?\Z")
 _TYPEFUNCS = {
     "float": float,
@@ -38,6 +39,26 @@ def _get_entity(host, port, token, name, timeout=60):
     return data.get("state", INVALID_NAME)
 
 
+def _convert(type_, value):
+    if not type_:
+        return value
+
+    if value in (None, ""):
+        return None
+
+    if value in (UNAVAILABLE, INVALID_NAME):
+        return value
+
+    try:
+        typefunc = _TYPEFUNCS[type_]
+        try:
+            return typefunc(value)
+        except (ValueError, TypeError) as exc:
+            return str(exc)
+    except KeyError:
+        return INVALID_TYPE
+
+
 def _get_cell(data, host, port, token, spec):
     mat = _RE_SPEC.match(spec)
     name = mat["name"]
@@ -46,28 +67,10 @@ def _get_cell(data, host, port, token, spec):
         value = data[name]
     except KeyError:
         value = _get_entity(host, port, token, name)
-
-    if not type_:
-        return value
-
-    try:
-        typefunc = _TYPEFUNCS[type_]
-        try:
-            return typefunc(value)
-        except ValueError as exc:
-            return str(exc)
-    except KeyError:
-        return INVALID_TYPE
+    return _convert(type_, value)
 
 
-def _add_row(sheet, host, port, token, specs, timestamp):
-    # pylint: disable=too-many-arguments,too-many-locals
-    data = {
-        "time": timestamp.time(),
-        "datetime": timestamp,
-        "date": timestamp.date(),
-    }
-
+def _get_latest(sheet):
     # Search 'latest' marker
     for rowidx, row in enumerate(sheet.iter_rows(), 1):
         cell = row[0]
@@ -83,6 +86,18 @@ def _add_row(sheet, host, port, token, specs, timestamp):
     else:
         sheet.append([""])
         rowidx = sheet.max_row
+    return rowidx
+
+
+def _add_row(sheet, host, port, token, specs, timestamp):
+    # pylint: disable=too-many-arguments,too-many-locals
+    data = {
+        "time": timestamp.time(),
+        "datetime": timestamp,
+        "date": timestamp.date(),
+    }
+
+    rowidx = _get_latest(sheet)
 
     prev_row, row = sheet.iter_rows(min_row=rowidx - 1, max_row=rowidx)
 
