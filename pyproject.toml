@@ -23,7 +23,7 @@ packages = [
 
 [project.urls]
 "Homepage" = "https://github.com/c0fec0de/homeassistant2xlsx"
-"Documentation" = "https://homeassistant2xlsx.readthedocs.io/en/latest/"
+"Documentation" = "https://homeassistant2xlsx.readthedocs.io/en/stable/"
 "Bug Tracker" = "https://github.com/c0fec0de/homeassistant2xlsx/issues"
 
 [tool.poetry.scripts]
